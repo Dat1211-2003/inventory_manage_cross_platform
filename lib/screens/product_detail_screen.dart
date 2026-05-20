@@ -266,6 +266,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       _buildRow('Ngày sản xuất', product.manufacturingDate),
                       const Divider(),
                       _buildRow('Hạn sử dụng', product.expiryDate),
+
+                      // them de cap nhat gia ban va gia nhap moi nhat
+                      _buildRow(
+                        'Giá nhập mới nhất',
+                        product.importPrice != null
+                            ? '${product.importPrice!.toStringAsFixed(0)} ₫'
+                            : 'Chưa có',
+                      ),
+                      const Divider(),
+                      _buildRow(
+                        'Ngày nhập gần nhất',
+                        product.lastImportDate ?? 'Chưa có',
+                      ),
                     ],
                   ),
                 ),
