@@ -5,12 +5,15 @@ class Imports {
   int quantity;
   double importPrice;
   String date;
+  String? productName; // Thêm trường này để hiển thị tên sản phẩm
+
   Imports({
     this.id,
     required this.productId,
     required this.quantity,
     required this.importPrice,
     required this.date,
+    this.productName,
   });
 
   Map<String, dynamic> toMap() {

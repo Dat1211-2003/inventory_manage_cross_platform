@@ -16,6 +16,9 @@ class Product {
   int? categoryId;
   String? createAt;
 
+  double? importPrice; // Thêm giá nhập mới nhất
+  String? lastImportDate; // Thêm ngày nhập gần nhất
+
   Product({
     this.id,
     required this.barcode,
@@ -29,6 +32,8 @@ class Product {
     int? quantity,
     this.costPrice,
     this.sellPrice,
+    this.importPrice,
+    this.lastImportDate,
     this.categoryId,
     this.createAt,
   }) : quantity = quantity ?? 0;
@@ -49,6 +54,9 @@ class Product {
       'sellPrice': sellPrice,
       'categoryId': categoryId,
       'createAt': createAt,
+
+      'importPrice': importPrice,
+      'lastImportDate': lastImportDate,
     };
   }
 
@@ -109,6 +117,8 @@ class Product {
       sellPrice: readDouble(map['sellPrice']),
       categoryId: readInt(map['categoryId']),
       createAt: map['createAt']?.toString(),
+      importPrice: readDouble(map['importPrice']),
+      lastImportDate: map['lastImportDate']?.toString(),
     );
   }
 }
