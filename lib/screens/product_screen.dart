@@ -9,7 +9,8 @@ import 'product_detail_screen.dart';
 import 'scan_screen.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key});
+  final bool selectMode;
+  const ProductScreen({super.key, this.selectMode = false});
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
@@ -160,6 +161,24 @@ class _ProductScreenState extends State<ProductScreen> {
             InkWell(
               borderRadius: BorderRadius.circular(20),
               onTap: () {
+                if (Platform.isWindows) {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Tính năng không khả dụng'),
+                      content: const Text(
+                        'Bạn không thể sử dụng tính năng này trên Windows.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                  return;
+                }
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const ScanScreen()),
@@ -370,7 +389,13 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                   ],
                                 ),
-                                onTap: () => _viewProduct(product),
+                                onTap: () {
+                                  if (widget.selectMode) {
+                                    Navigator.pop(context, product);
+                                  } else {
+                                    _viewProduct(product);
+                                  }
+                                },
                               ),
                             );
                           },

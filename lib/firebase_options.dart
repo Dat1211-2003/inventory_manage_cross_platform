@@ -33,10 +33,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -64,5 +61,13 @@ class DefaultFirebaseOptions {
     projectId: 'inventory-manager-d70ea',
     storageBucket: 'inventory-manager-d70ea.firebasestorage.app',
     iosBundleId: 'com.example.inventoryManage',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDfziugRUTb6CfwbzJG9QUns_SxojmuwOo',
+    appId: '1:762221062157:windows:a804bfca11befefc68cd44',
+    messagingSenderId: '762221062157',
+    projectId: 'inventory-manager-d70ea',
+    storageBucket: 'inventory-manager-d70ea.firebasestorage.app',
   );
 }
