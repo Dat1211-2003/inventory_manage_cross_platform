@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:inventory_manage/routes/app_routes.dart';
-import 'package:inventory_manage/screens/home_screen.dart';
+import 'package:inventory_manage/screens/auth_wrapper.dart';
 import 'package:flutter/foundation.dart';
 
 import 'firebase_options.dart';
@@ -35,8 +35,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Inventory Manage',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {'/': (_) => const HomeScreen(), ...AppRoutes.routes},
+      // AuthWrapper thay HomeScreen làm màn hình gốc
+      home: const AuthWrapper(),
+      routes: AppRoutes.routes,
       builder: (context, child) {
         final mediaQuery = MediaQuery.of(context);
         return MediaQuery(
