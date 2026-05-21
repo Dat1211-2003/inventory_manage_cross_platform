@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -63,6 +60,19 @@ class DefaultFirebaseOptions {
     messagingSenderId: '762221062157',
     projectId: 'inventory-manager-d70ea',
     storageBucket: 'inventory-manager-d70ea.firebasestorage.app',
+    androidClientId: '762221062157-nceu16kv3dnnt9a5hie7bu3cs8vultpm.apps.googleusercontent.com',
+    iosClientId: '762221062157-g9mf8c8akl966vqdnkqh63o7ofa8o5nc.apps.googleusercontent.com',
     iosBundleId: 'com.example.inventoryManage',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDsE3qXc8TmfbiJ6dr8bZ0nZuJsNSiqwM4',
+    appId: '1:762221062157:web:8aa17cc66fac065e68cd44',
+    messagingSenderId: '762221062157',
+    projectId: 'inventory-manager-d70ea',
+    authDomain: 'inventory-manager-d70ea.firebaseapp.com',
+    storageBucket: 'inventory-manager-d70ea.firebasestorage.app',
+    measurementId: 'G-4PR82DYTHQ',
+  );
+
 }
