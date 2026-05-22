@@ -91,6 +91,14 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _loginWithGoogle() async {
+    if (!AuthService.isGoogleSignInSupported) {
+      _showError(
+        'Google Sign-In chưa hỗ trợ trên Windows/Linux native. '
+        'Vui lòng đăng nhập bằng Email/Mật khẩu hoặc dùng bản web.',
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
       final result = await AuthService.signInWithGoogle();
@@ -179,8 +187,11 @@ class _LoginScreenState extends State<LoginScreen>
               ),
             ],
           ),
-          child: const Icon(Icons.inventory_2_rounded,
-              color: Colors.white, size: 44),
+          child: const Icon(
+            Icons.inventory_2_rounded,
+            color: Colors.white,
+            size: 44,
+          ),
         ),
         const SizedBox(height: 16),
         Text(
@@ -206,7 +217,11 @@ class _LoginScreenState extends State<LoginScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: const [
-          BoxShadow(blurRadius: 20, color: Colors.black12, offset: Offset(0, 6))
+          BoxShadow(
+            blurRadius: 20,
+            color: Colors.black12,
+            offset: Offset(0, 6),
+          ),
         ],
       ),
       child: Column(
@@ -223,7 +238,9 @@ class _LoginScreenState extends State<LoginScreen>
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey.shade600,
               labelStyle: const TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 15),
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
               indicator: BoxDecoration(
                 color: Colors.blue.shade700,
                 borderRadius: BorderRadius.circular(12),
@@ -241,10 +258,7 @@ class _LoginScreenState extends State<LoginScreen>
             height: 480,
             child: TabBarView(
               controller: _tabController,
-              children: [
-                _buildLoginForm(),
-                _buildRegisterForm(),
-              ],
+              children: [_buildLoginForm(), _buildRegisterForm()],
             ),
           ),
         ],
@@ -274,11 +288,14 @@ class _LoginScreenState extends State<LoginScreen>
               icon: Icons.lock_outline,
               obscure: !_loginPasswordVisible,
               suffixIcon: IconButton(
-                icon: Icon(_loginPasswordVisible
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined),
+                icon: Icon(
+                  _loginPasswordVisible
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
                 onPressed: () => setState(
-                    () => _loginPasswordVisible = !_loginPasswordVisible),
+                  () => _loginPasswordVisible = !_loginPasswordVisible,
+                ),
               ),
               validator: (v) =>
                   (v == null || v.isEmpty) ? 'Vui lòng nhập mật khẩu' : null,
@@ -287,15 +304,14 @@ class _LoginScreenState extends State<LoginScreen>
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: _forgotPassword,
-                child: Text('Quên mật khẩu?',
-                    style: TextStyle(color: Colors.blue.shade700)),
+                child: Text(
+                  'Quên mật khẩu?',
+                  style: TextStyle(color: Colors.blue.shade700),
+                ),
               ),
             ),
             const SizedBox(height: 4),
-            _buildPrimaryButton(
-              label: 'Đăng nhập',
-              onPressed: _loginWithEmail,
-            ),
+            _buildPrimaryButton(label: 'Đăng nhập', onPressed: _loginWithEmail),
             const SizedBox(height: 16),
             _buildDivider(),
             const SizedBox(height: 16),
@@ -336,9 +352,11 @@ class _LoginScreenState extends State<LoginScreen>
               icon: Icons.lock_outline,
               obscure: !_regPasswordVisible,
               suffixIcon: IconButton(
-                icon: Icon(_regPasswordVisible
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined),
+                icon: Icon(
+                  _regPasswordVisible
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
                 onPressed: () =>
                     setState(() => _regPasswordVisible = !_regPasswordVisible),
               ),
@@ -355,11 +373,13 @@ class _LoginScreenState extends State<LoginScreen>
               icon: Icons.lock_outline,
               obscure: !_regConfirmVisible,
               suffixIcon: IconButton(
-                icon: Icon(_regConfirmVisible
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined),
-                onPressed: () => setState(
-                    () => _regConfirmVisible = !_regConfirmVisible),
+                icon: Icon(
+                  _regConfirmVisible
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
+                onPressed: () =>
+                    setState(() => _regConfirmVisible = !_regConfirmVisible),
               ),
               validator: (v) {
                 if (v != _regPasswordCtrl.text) return 'Mật khẩu không khớp';
@@ -367,10 +387,7 @@ class _LoginScreenState extends State<LoginScreen>
               },
             ),
             const SizedBox(height: 20),
-            _buildPrimaryButton(
-              label: 'Tạo tài khoản',
-              onPressed: _register,
-            ),
+            _buildPrimaryButton(label: 'Tạo tài khoản', onPressed: _register),
             const SizedBox(height: 16),
             _buildDivider(),
             const SizedBox(height: 16),
@@ -418,8 +435,10 @@ class _LoginScreenState extends State<LoginScreen>
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: Colors.red.shade400),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
     );
   }
@@ -436,8 +455,9 @@ class _LoginScreenState extends State<LoginScreen>
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
           elevation: 0,
         ),
         child: _isLoading
@@ -445,11 +465,17 @@ class _LoginScreenState extends State<LoginScreen>
                 width: 22,
                 height: 22,
                 child: CircularProgressIndicator(
-                    color: Colors.white, strokeWidth: 2.5),
+                  color: Colors.white,
+                  strokeWidth: 2.5,
+                ),
               )
-            : Text(label,
+            : Text(
+                label,
                 style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.bold)),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
       ),
     );
   }
@@ -460,8 +486,10 @@ class _LoginScreenState extends State<LoginScreen>
         Expanded(child: Divider(color: Colors.grey.shade300)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text('hoặc',
-              style: TextStyle(color: Colors.grey.shade500, fontSize: 13)),
+          child: Text(
+            'hoặc',
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+          ),
         ),
         Expanded(child: Divider(color: Colors.grey.shade300)),
       ],
@@ -469,21 +497,26 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Widget _buildGoogleButton() {
+    final supported = AuthService.isGoogleSignInSupported;
+
     return SizedBox(
       width: double.infinity,
       height: 50,
       child: OutlinedButton.icon(
-        onPressed: _isLoading ? null : _loginWithGoogle,
+        onPressed: (_isLoading || !supported) ? null : _loginWithGoogle,
         icon: _GoogleIcon(),
-        label: const Text(
-          'Tiếp tục với Google',
+        label: Text(
+          supported
+              ? 'Tiếp tục với Google'
+              : 'Google chưa hỗ trợ trên desktop native',
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         ),
         style: OutlinedButton.styleFrom(
           foregroundColor: Colors.grey.shade800,
           side: BorderSide(color: Colors.grey.shade300),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
     );
@@ -560,5 +593,3 @@ class _GoogleIconPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
-

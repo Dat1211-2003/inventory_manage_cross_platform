@@ -35,7 +35,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Inventory Manage',
       debugShowCheckedModeBanner: false,
-      // AuthWrapper thay HomeScreen làm màn hình gốc
       home: const AuthWrapper(),
       routes: AppRoutes.routes,
       builder: (context, child) {
