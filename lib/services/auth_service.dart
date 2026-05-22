@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -6,6 +8,30 @@ class AuthService {
 
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  static bool get isGoogleSignInSupported {
+    if (kIsWeb) return true;
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  static bool get _usesGoogleSignInPlugin {
+    if (kIsWeb) return false;
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return true;
+      default:
+        return false;
+    }
+  }
 
   /// Stream trạng thái đăng nhập
   static Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -43,18 +69,40 @@ class AuthService {
 
   // ─── ĐĂNG NHẬP bằng Google ──────────────────────────────────────────────────
   static Future<UserCredential?> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) return null; // Người dùng hủy
+    if (!isGoogleSignInSupported) {
+      throw UnsupportedError(
+        'Google Sign-In hiện chưa hỗ trợ trên nền tảng này. '
+        'Vui lòng đăng nhập bằng Email/Mật khẩu.',
+      );
+    }
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    try {
+      if (kIsWeb) {
+        final provider = GoogleAuthProvider();
+        return await _auth.signInWithPopup(provider);
+      }
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+      if (_usesGoogleSignInPlugin) {
+        final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+        if (googleUser == null) return null; // Người dùng hủy
 
-    return await _auth.signInWithCredential(credential);
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        return await _auth.signInWithCredential(credential);
+      }
+    } on MissingPluginException {
+      throw UnsupportedError(
+        'Google Sign-In plugin chưa khả dụng trên thiết bị này. '
+        'Vui lòng đăng nhập bằng Email/Mật khẩu.',
+      );
+    }
+    return null;
   }
 
   // ─── QUÊN MẬT KHẨU ──────────────────────────────────────────────────────────
@@ -64,10 +112,14 @@ class AuthService {
 
   // ─── ĐĂNG XUẤT ──────────────────────────────────────────────────────────────
   static Future<void> signOut() async {
-    await Future.wait([
-      _auth.signOut(),
-      _googleSignIn.signOut(),
-    ]);
+    await _auth.signOut();
+    if (_usesGoogleSignInPlugin) {
+      try {
+        await _googleSignIn.signOut();
+      } on MissingPluginException {
+        // Ignore when plugin is unavailable on current platform.
+      }
+    }
   }
 
   // ─── Chuyển lỗi Firebase sang tiếng Việt ───────────────────────────────────
@@ -91,6 +143,9 @@ class AuthService {
         return 'Lỗi kết nối mạng. Vui lòng kiểm tra internet.';
       case 'invalid-credential':
         return 'Thông tin đăng nhập không hợp lệ.';
+      case 'operation-not-supported':
+        return 'Đăng nhập Google chưa hỗ trợ trên nền tảng desktop native. '
+            'Bạn có thể dùng Email/Mật khẩu hoặc chạy bản web.';
       default:
         return 'Đã xảy ra lỗi: ${e.message}';
     }
